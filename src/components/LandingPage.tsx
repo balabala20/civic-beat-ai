@@ -201,13 +201,13 @@ const LandingPage = () => {
                     ))}
                   </div>
                   
-                  <Button className="w-full" size="lg" disabled>
+                  <Button 
+                    className="w-full" 
+                    size="lg" 
+                    onClick={() => window.location.href = `/auth?role=${role.title.toLowerCase().replace('municipal ', '').replace(' ', '_')}`}
+                  >
                     {role.buttonText}
-                    <AlertTriangle className="ml-2 h-4 w-4" />
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center">
-                    Connect Supabase to enable authentication
-                  </p>
                 </CardContent>
               </Card>
             ))}
