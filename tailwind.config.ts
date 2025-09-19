@@ -22,10 +22,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -38,6 +40,7 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          hover: "hsl(var(--accent-hover))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -46,6 +49,24 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        // Civic App Specific Colors
+        civic: {
+          blue: "hsl(var(--civic-blue))",
+          "blue-light": "hsl(var(--civic-blue-light))",
+        },
+        community: {
+          green: "hsl(var(--community-green))",
+          "green-light": "hsl(var(--community-green-light))",
+        },
+        warning: {
+          amber: "hsl(var(--warning-amber))",
+          "amber-light": "hsl(var(--warning-amber-light))",
+        },
+        status: {
+          resolved: "hsl(var(--status-resolved))",
+          progress: "hsl(var(--status-progress))",
+          pending: "hsl(var(--status-pending))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -57,6 +78,19 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      backgroundImage: {
+        "gradient-civic": "var(--gradient-civic)",
+        "gradient-hero": "var(--gradient-hero)",
+        "gradient-card": "var(--gradient-card)",
+      },
+      boxShadow: {
+        civic: "var(--shadow-civic)",
+        community: "var(--shadow-community)",
+        elegant: "var(--shadow-elegant)",
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
