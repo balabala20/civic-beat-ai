@@ -56,6 +56,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "departments_head_id_fkey"
+            columns: ["head_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       issue_interactions: {
@@ -96,6 +103,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "issue_interactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -185,6 +199,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "issues_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "issues_department_id_fkey"
             columns: ["department_id"]
             isOneToOne: false
@@ -203,6 +224,13 @@ export type Database = {
             columns: ["reporter_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "issues_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -251,6 +279,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -343,17 +378,90 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "user_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "user_follows_following_id_fkey"
             columns: ["following_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          badges: Json | null
+          created_at: string | null
+          followers_count: number | null
+          following_count: number | null
+          full_name: string | null
+          id: string | null
+          is_verified: boolean | null
+          issues_reported: number | null
+          location_address: string | null
+          location_lat: number | null
+          location_lng: number | null
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          updated_at: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          badges?: Json | null
+          created_at?: string | null
+          followers_count?: number | null
+          following_count?: number | null
+          full_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          issues_reported?: number | null
+          location_address?: never
+          location_lat?: never
+          location_lng?: never
+          phone?: never
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          badges?: Json | null
+          created_at?: string | null
+          followers_count?: number | null
+          following_count?: number | null
+          full_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          issues_reported?: number | null
+          location_address?: never
+          location_lat?: never
+          location_lng?: never
+          phone?: never
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
