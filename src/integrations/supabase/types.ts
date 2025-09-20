@@ -360,6 +360,24 @@ export type Database = {
         Args: { profile_user_id: string }
         Returns: boolean
       }
+      get_public_profile_data: {
+        Args: { target_user_id: string }
+        Returns: {
+          avatar_url: string
+          badges: Json
+          created_at: string
+          followers_count: number
+          following_count: number
+          full_name: string
+          id: string
+          is_verified: boolean
+          issues_reported: number
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+          username: string
+        }[]
+      }
     }
     Enums: {
       issue_category:
