@@ -5,10 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { 
   Home, 
   Plus, 
-  Bell, 
   User, 
   MapPin, 
   Heart, 
@@ -17,8 +19,7 @@ import {
   Trophy,
   Camera,
   LogOut,
-  Moon,
-  Sun
+  Upload
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -143,9 +144,6 @@ const CitizenDashboard = () => {
             <h1 className="text-2xl font-bold text-primary">CivicConnect</h1>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              <Button variant="ghost" size="sm">
-                <Bell className="h-5 w-5" />
-              </Button>
               <Button variant="ghost" size="sm" onClick={signOut}>
                 <LogOut className="h-5 w-5" />
               </Button>
@@ -155,156 +153,228 @@ const CitizenDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={profile?.avatar_url || ''} />
-                    <AvatarFallback>
-                      {profile?.full_name?.charAt(0) || profile?.username?.charAt(0) || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold">{profile?.full_name || profile?.username}</h3>
-                    <p className="text-sm text-muted-foreground">Citizen</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm">Issues Reported</span>
-                    <Badge variant="secondary">{profile?.issues_reported || 0}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Followers</span>
-                    <Badge variant="secondary">{profile?.followers_count || 0}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Following</span>
-                    <Badge variant="secondary">{profile?.following_count || 0}</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+      <div className="container mx-auto px-4 py-6 space-y-6">
+        {/* Profile Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={profile?.avatar_url || ''} />
+                <AvatarFallback className="text-lg">
+                  {profile?.full_name?.charAt(0) || profile?.username?.charAt(0) || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold">{profile?.full_name || profile?.username}</h2>
+                <p className="text-muted-foreground">Citizen • Active Member</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">{profile?.issues_reported || 0}</div>
+                <div className="text-sm text-muted-foreground">Issues Reported</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">{profile?.followers_count || 0}</div>
+                <div className="text-sm text-muted-foreground">Followers</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">{profile?.following_count || 0}</div>
+                <div className="text-sm text-muted-foreground">Following</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            <Card className="mt-4">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Trophy className="h-5 w-5" />
-                  <span>Leaderboard</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">1. SuperCitizen</span>
-                    <Badge>127 reports</Badge>
+        {/* Leaderboard Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Trophy className="h-5 w-5 text-yellow-500" />
+              <span>Top 100 Contributors</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {[
+                { rank: 1, name: 'SuperCitizen', reports: 127, badge: '🥇' },
+                { rank: 2, name: 'CityWatcher', reports: 89, badge: '🥈' },
+                { rank: 3, name: 'CivicHero', reports: 76, badge: '🥉' },
+                { rank: 4, name: profile?.username || 'You', reports: profile?.issues_reported || 0, badge: '⭐' },
+                { rank: 5, name: 'ParkGuardian', reports: 45, badge: '🌟' }
+              ].map((user) => (
+                <div key={user.rank} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-lg">{user.badge}</span>
+                    <div>
+                      <span className="font-medium">#{user.rank} {user.name}</span>
+                      {user.name === (profile?.username || 'You') && (
+                        <Badge variant="secondary" className="ml-2">You</Badge>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">2. CityWatcher</span>
-                    <Badge>89 reports</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">3. {profile?.username || 'You'}</span>
-                    <Badge>{profile?.issues_reported || 0} reports</Badge>
-                  </div>
+                  <Badge variant="outline">{user.reports} reports</Badge>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Main Feed */}
-          <div className="lg:col-span-3">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="feed" className="flex items-center space-x-2">
-                  <Home className="h-4 w-4" />
-                  <span>Feed</span>
-                </TabsTrigger>
-                <TabsTrigger value="report" className="flex items-center space-x-2">
-                  <Plus className="h-4 w-4" />
-                  <span>Report</span>
-                </TabsTrigger>
-                <TabsTrigger value="nearby" className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>Nearby</span>
-                </TabsTrigger>
-                <TabsTrigger value="profile" className="flex items-center space-x-2">
-                  <User className="h-4 w-4" />
-                  <span>Profile</span>
-                </TabsTrigger>
-              </TabsList>
+        {/* Posts Feed */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Community Issues Feed</h2>
+          {mockIssues.map((issue) => (
+            <IssueCard key={issue.id} issue={issue} />
+          ))}
+        </div>
+      </div>
 
-              <TabsContent value="feed" className="space-y-4">
-                <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold mb-2">Community Issues Feed</h2>
-                  <p className="text-muted-foreground">Stay updated on civic issues in your area</p>
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t">
+        <div className="container mx-auto px-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-4 h-16 bg-transparent">
+              <TabsTrigger value="feed" className="flex-col space-x-0 space-y-1 h-full">
+                <Home className="h-5 w-5" />
+                <span className="text-xs">Feed</span>
+              </TabsTrigger>
+              <TabsTrigger value="report" className="flex-col space-x-0 space-y-1 h-full">
+                <Plus className="h-5 w-5" />
+                <span className="text-xs">Report</span>
+              </TabsTrigger>
+              <TabsTrigger value="nearby" className="flex-col space-x-0 space-y-1 h-full">
+                <MapPin className="h-5 w-5" />
+                <span className="text-xs">Nearby</span>
+              </TabsTrigger>
+              <TabsTrigger value="profile" className="flex-col space-x-0 space-y-1 h-full">
+                <User className="h-5 w-5" />
+                <span className="text-xs">Profile</span>
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Tab Content Overlays */}
+            <TabsContent value="report" className="fixed inset-0 bg-background z-50 overflow-y-auto">
+              <div className="container mx-auto px-4 py-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h1 className="text-2xl font-bold">Report New Issue</h1>
+                  <Button variant="ghost" onClick={() => setActiveTab('feed')}>
+                    ✕
+                  </Button>
                 </div>
-                {mockIssues.map((issue) => (
-                  <IssueCard key={issue.id} issue={issue} />
-                ))}
-              </TabsContent>
-
-              <TabsContent value="report" className="space-y-4">
+                
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Camera className="h-6 w-6" />
-                      <span>Report New Issue</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12 border-2 border-dashed border-muted rounded-lg">
-                      <Camera className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">Upload Photo/Video</h3>
-                      <p className="text-muted-foreground mb-4">Take a photo or video of the issue</p>
-                      <Button>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Media
+                  <CardContent className="p-6 space-y-6">
+                    <div>
+                      <Label htmlFor="reporter-name">Reporter Name</Label>
+                      <Input 
+                        id="reporter-name" 
+                        placeholder="Enter your name"
+                        defaultValue={profile?.full_name || profile?.username || ''}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="issue-title">Issue Title</Label>
+                      <Input 
+                        id="issue-title" 
+                        placeholder="Brief description of the issue"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="location">Location</Label>
+                      <Input 
+                        id="location" 
+                        placeholder="Street address or area description"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea 
+                        id="description" 
+                        placeholder="Provide detailed information about the issue..."
+                        rows={4}
+                      />
+                    </div>
+
+                    <div>
+                      <Label>Upload Images</Label>
+                      <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                        <Upload className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-lg font-semibold mb-2">Upload Photos or Videos</h3>
+                        <p className="text-muted-foreground mb-4">
+                          Take photos or videos to help document the issue
+                        </p>
+                        <Button variant="outline">
+                          <Camera className="h-4 w-4 mr-2" />
+                          Choose Files
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-3">
+                      <Button className="flex-1">
+                        Submit Report
+                      </Button>
+                      <Button variant="outline" onClick={() => setActiveTab('feed')}>
+                        Cancel
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            </TabsContent>
 
-              <TabsContent value="nearby">
+            <TabsContent value="nearby" className="fixed inset-0 bg-background z-50 overflow-y-auto">
+              <div className="container mx-auto px-4 py-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h1 className="text-2xl font-bold">Issues Near You</h1>
+                  <Button variant="ghost" onClick={() => setActiveTab('feed')}>
+                    ✕
+                  </Button>
+                </div>
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Issues Near You</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12">
-                      <MapPin className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">Enable Location</h3>
-                      <p className="text-muted-foreground">Allow location access to see nearby issues</p>
-                    </div>
+                  <CardContent className="p-12 text-center">
+                    <MapPin className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">Enable Location Access</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Allow location access to see issues reported near your area
+                    </p>
+                    <Button>Enable Location</Button>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            </TabsContent>
 
-              <TabsContent value="profile">
+            <TabsContent value="profile" className="fixed inset-0 bg-background z-50 overflow-y-auto">
+              <div className="container mx-auto px-4 py-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h1 className="text-2xl font-bold">Profile Settings</h1>
+                  <Button variant="ghost" onClick={() => setActiveTab('feed')}>
+                    ✕
+                  </Button>
+                </div>
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Profile Settings</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12">
-                      <User className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">Profile Management</h3>
-                      <p className="text-muted-foreground">Update your profile information</p>
-                    </div>
+                  <CardContent className="p-12 text-center">
+                    <User className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">Profile Management</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Update your profile information and preferences
+                    </p>
+                    <Button>Edit Profile</Button>
                   </CardContent>
                 </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
+
+      {/* Bottom padding to prevent content from being hidden behind fixed nav */}
+      <div className="h-20"></div>
     </div>
   );
 };

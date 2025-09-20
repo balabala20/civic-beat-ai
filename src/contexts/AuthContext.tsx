@@ -57,17 +57,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (session?.user) {
           // Fetch user profile
-          setTimeout(async () => {
-            const { data: profileData, error } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('user_id', session.user.id)
-              .single();
+          const { data: profileData, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
 
-            if (!error && profileData) {
-              setProfile(profileData);
-            }
-          }, 0);
+          if (!error && profileData) {
+            setProfile(profileData);
+          }
         } else {
           setProfile(null);
         }
