@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { 
   Home, 
   Plus, 
@@ -17,15 +13,14 @@ import {
   MessageCircle, 
   Share2,
   Trophy,
-  Camera,
-  LogOut,
-  Upload
+  LogOut
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useNavigate } from 'react-router-dom';
 
 const CitizenDashboard = () => {
   const { profile, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState('feed');
+  const navigate = useNavigate();
 
   const mockIssues = [
     {
@@ -234,142 +229,40 @@ const CitizenDashboard = () => {
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t">
         <div className="container mx-auto px-4">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4 h-16 bg-transparent">
-              <TabsTrigger value="feed" className="flex-col space-x-0 space-y-1 h-full">
-                <Home className="h-5 w-5" />
-                <span className="text-xs">Feed</span>
-              </TabsTrigger>
-              <TabsTrigger value="report" className="flex-col space-x-0 space-y-1 h-full">
-                <Plus className="h-5 w-5" />
-                <span className="text-xs">Report</span>
-              </TabsTrigger>
-              <TabsTrigger value="nearby" className="flex-col space-x-0 space-y-1 h-full">
-                <MapPin className="h-5 w-5" />
-                <span className="text-xs">Nearby</span>
-              </TabsTrigger>
-              <TabsTrigger value="profile" className="flex-col space-x-0 space-y-1 h-full">
-                <User className="h-5 w-5" />
-                <span className="text-xs">Profile</span>
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Tab Content Overlays */}
-            <TabsContent value="report" className="fixed inset-0 bg-background z-50 overflow-y-auto">
-              <div className="container mx-auto px-4 py-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h1 className="text-2xl font-bold">Report New Issue</h1>
-                  <Button variant="ghost" onClick={() => setActiveTab('feed')}>
-                    ✕
-                  </Button>
-                </div>
-                
-                <Card>
-                  <CardContent className="p-6 space-y-6">
-                    <div>
-                      <Label htmlFor="reporter-name">Reporter Name</Label>
-                      <Input 
-                        id="reporter-name" 
-                        placeholder="Enter your name"
-                        defaultValue={profile?.full_name || profile?.username || ''}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="issue-title">Issue Title</Label>
-                      <Input 
-                        id="issue-title" 
-                        placeholder="Brief description of the issue"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="location">Location</Label>
-                      <Input 
-                        id="location" 
-                        placeholder="Street address or area description"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea 
-                        id="description" 
-                        placeholder="Provide detailed information about the issue..."
-                        rows={4}
-                      />
-                    </div>
-
-                    <div>
-                      <Label>Upload Images</Label>
-                      <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
-                        <Upload className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">Upload Photos or Videos</h3>
-                        <p className="text-muted-foreground mb-4">
-                          Take photos or videos to help document the issue
-                        </p>
-                        <Button variant="outline">
-                          <Camera className="h-4 w-4 mr-2" />
-                          Choose Files
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="flex space-x-3">
-                      <Button className="flex-1">
-                        Submit Report
-                      </Button>
-                      <Button variant="outline" onClick={() => setActiveTab('feed')}>
-                        Cancel
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="nearby" className="fixed inset-0 bg-background z-50 overflow-y-auto">
-              <div className="container mx-auto px-4 py-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h1 className="text-2xl font-bold">Issues Near You</h1>
-                  <Button variant="ghost" onClick={() => setActiveTab('feed')}>
-                    ✕
-                  </Button>
-                </div>
-                <Card>
-                  <CardContent className="p-12 text-center">
-                    <MapPin className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">Enable Location Access</h3>
-                    <p className="text-muted-foreground mb-6">
-                      Allow location access to see issues reported near your area
-                    </p>
-                    <Button>Enable Location</Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="profile" className="fixed inset-0 bg-background z-50 overflow-y-auto">
-              <div className="container mx-auto px-4 py-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h1 className="text-2xl font-bold">Profile Settings</h1>
-                  <Button variant="ghost" onClick={() => setActiveTab('feed')}>
-                    ✕
-                  </Button>
-                </div>
-                <Card>
-                  <CardContent className="p-12 text-center">
-                    <User className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">Profile Management</h3>
-                    <p className="text-muted-foreground mb-6">
-                      Update your profile information and preferences
-                    </p>
-                    <Button>Edit Profile</Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>
+          <div className="grid grid-cols-4 h-16">
+            <Button 
+              variant="ghost" 
+              className="flex-col space-x-0 space-y-1 h-full" 
+              onClick={() => navigate('/dashboard')}
+            >
+              <Home className="h-5 w-5" />
+              <span className="text-xs">Feed</span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="flex-col space-x-0 space-y-1 h-full"
+              onClick={() => navigate('/report')}
+            >
+              <Plus className="h-5 w-5" />
+              <span className="text-xs">Report</span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="flex-col space-x-0 space-y-1 h-full"
+              onClick={() => navigate('/nearby')}
+            >
+              <MapPin className="h-5 w-5" />
+              <span className="text-xs">Nearby</span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              className="flex-col space-x-0 space-y-1 h-full"
+              onClick={() => navigate('/profile')}
+            >
+              <User className="h-5 w-5" />
+              <span className="text-xs">Profile</span>
+            </Button>
+          </div>
         </div>
       </div>
 

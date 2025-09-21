@@ -8,6 +8,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import ReportIssue from "./pages/ReportIssue";
+import NearbyIssues from "./pages/NearbyIssues";
+import UserProfile from "./pages/UserProfile";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +28,9 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/report" element={<ReportIssue />} />
+              <Route path="/nearby" element={<NearbyIssues />} />
+              <Route path="/profile" element={<UserProfile />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
