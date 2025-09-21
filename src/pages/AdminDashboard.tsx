@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +22,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 
 const AdminDashboard = () => {
   const { profile, signOut } = useAuth();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
 
   const systemStats = {
@@ -85,6 +87,24 @@ const AdminDashboard = () => {
       case 'resolved': return 'bg-green-500';
       default: return 'bg-gray-500';
     }
+  };
+
+  const handleViewDetails = (issueId: string) => {
+    window.location.href = `/issue/${issueId}`;
+  };
+
+  const handleAddStaff = () => {
+    toast({
+      title: "Add Staff Member",
+      description: "Staff member addition feature will open in a modal"
+    });
+  };
+
+  const handleOpenSettings = () => {
+    toast({
+      title: "Settings Panel",
+      description: "System settings panel will open"
+    });
   };
 
   return (
@@ -232,7 +252,13 @@ const AdminDashboard = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-sm text-muted-foreground">Open for {issue.timeOpen}</p>
-                        <Button size="sm" variant="ghost">View Details</Button>
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => handleViewDetails(issue.id)}
+                        >
+                          View Details
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -270,7 +296,10 @@ const AdminDashboard = () => {
           <TabsContent value="users" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">User Management</h2>
-              <Button className="flex items-center space-x-2">
+              <Button 
+                className="flex items-center space-x-2"
+                onClick={handleAddStaff}
+              >
                 <UserPlus className="h-4 w-4" />
                 <span>Add Staff Member</span>
               </Button>
@@ -321,7 +350,10 @@ const AdminDashboard = () => {
                     <p className="text-sm text-muted-foreground">Configure role-based access controls</p>
                   </div>
                   
-                  <Button className="mt-4">
+                  <Button 
+                    className="mt-4"
+                    onClick={handleOpenSettings}
+                  >
                     <Settings className="h-4 w-4 mr-2" />
                     Open Settings Panel
                   </Button>

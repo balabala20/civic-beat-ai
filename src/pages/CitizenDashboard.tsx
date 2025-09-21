@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 const CitizenDashboard = () => {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const [likedIssues, setLikedIssues] = useState<Set<string>>(new Set());
 
   const mockIssues = [
     {
@@ -74,6 +75,36 @@ const CitizenDashboard = () => {
     }
   };
 
+  const handleLike = (issueId: string) => {
+    setLikedIssues(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(issueId)) {
+        newSet.delete(issueId);
+      } else {
+        newSet.add(issueId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleComment = (issueId: string) => {
+    // Navigate to detailed issue view with comments
+    navigate(`/issue/${issueId}`);
+  };
+
+  const handleShare = (issue: any) => {
+    if (navigator.share) {
+      navigator.share({
+        title: issue.title,
+        text: issue.description,
+        url: `${window.location.origin}/issue/${issue.id}`
+      });
+    } else {
+      navigator.clipboard.writeText(`${window.location.origin}/issue/${issue.id}`);
+      alert('Link copied to clipboard!');
+    }
+  };
+
   const IssueCard = ({ issue }: { issue: any }) => (
     <Card className="mb-4 hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
@@ -113,15 +144,29 @@ const CitizenDashboard = () => {
 
         <div className="flex items-center justify-between pt-3 border-t">
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1">
-              <Heart className="h-4 w-4" />
-              <span>{issue.upvotes}</span>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center space-x-1"
+              onClick={() => handleLike(issue.id)}
+            >
+              <Heart className={`h-4 w-4 ${likedIssues.has(issue.id) ? 'fill-red-500 text-red-500' : ''}`} />
+              <span>{issue.upvotes + (likedIssues.has(issue.id) ? 1 : 0)}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center space-x-1"
+              onClick={() => handleComment(issue.id)}
+            >
               <MessageCircle className="h-4 w-4" />
               <span>{issue.comments}</span>
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => handleShare(issue)}
+            >
               <Share2 className="h-4 w-4" />
             </Button>
           </div>

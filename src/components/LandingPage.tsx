@@ -91,9 +91,9 @@ const LandingPage = () => {
             <span className="text-2xl font-bold text-foreground">CivicConnect</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">About</Button>
-            <Button variant="ghost">Features</Button>
-            <Button variant="ghost">Contact</Button>
+            <Button variant="ghost" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>About</Button>
+            <Button variant="ghost" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>Features</Button>
+            <Button variant="ghost" onClick={() => document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })}>Contact</Button>
             <ThemeToggle />
           </div>
         </div>
@@ -121,11 +121,20 @@ const LandingPage = () => {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary-hover text-primary-foreground shadow-civic">
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary-hover text-primary-foreground shadow-civic"
+                  onClick={() => window.location.href = '/auth?role=citizen'}
+                >
                   <Users className="mr-2 h-5 w-5" />
                   Get Started as Citizen
                 </Button>
-                <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/5">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="border-primary text-primary hover:bg-primary/5"
+                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   Learn More
                 </Button>
               </div>
@@ -144,7 +153,7 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4 bg-muted/30">
+      <section id="features" className="py-16 px-4 bg-muted/30">
         <div className="container mx-auto">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl font-bold text-foreground">Powerful Features</h2>
@@ -240,7 +249,7 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 border-t border-border">
+      <footer id="footer" className="py-12 px-4 border-t border-border">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 
 const StaffDashboard = () => {
   const { profile, signOut } = useAuth();
+  const { toast } = useToast();
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
 
@@ -61,6 +63,8 @@ const StaffDashboard = () => {
     },
   ];
 
+  const [issues, setIssues] = useState(mockAssignedIssues);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'assigned': return 'bg-blue-500';
@@ -91,17 +95,34 @@ const StaffDashboard = () => {
     }
   };
 
-  const filteredIssues = mockAssignedIssues.filter(issue => {
+  const handleStatusChange = (issueId: string, newStatus: string) => {
+    setIssues(prevIssues => 
+      prevIssues.map(issue => 
+        issue.id === issueId ? { ...issue, status: newStatus } : issue
+      )
+    );
+    toast({
+      title: "Status Updated",
+      description: `Issue status changed to ${newStatus.replace('_', ' ')}`
+    });
+  };
+
+  const handleViewDetails = (issueId: string) => {
+    // Navigate to detailed issue view
+    window.location.href = `/issue/${issueId}`;
+  };
+
+  const filteredIssues = issues.filter(issue => {
     if (filterStatus !== 'all' && issue.status !== filterStatus) return false;
     if (filterCategory !== 'all' && issue.category !== filterCategory) return false;
     return true;
   });
 
   const stats = {
-    assigned: mockAssignedIssues.filter(i => i.status === 'assigned').length,
-    inProgress: mockAssignedIssues.filter(i => i.status === 'in_progress').length,
-    resolved: mockAssignedIssues.filter(i => i.status === 'resolved').length,
-    overdue: mockAssignedIssues.filter(i => new Date(i.dueDate) < new Date() && i.status !== 'resolved').length,
+    assigned: issues.filter(i => i.status === 'assigned').length,
+    inProgress: issues.filter(i => i.status === 'in_progress').length,
+    resolved: issues.filter(i => i.status === 'resolved').length,
+    overdue: issues.filter(i => new Date(i.dueDate) < new Date() && i.status !== 'resolved').length,
   };
 
   return (
@@ -267,19 +288,38 @@ const StaffDashboard = () => {
 
                 <div className="flex items-center space-x-2">
                   {issue.status === 'assigned' && (
-                    <Button size="sm">
+                    <Button 
+                      size="sm"
+                      onClick={() => handleStatusChange(issue.id, 'in_progress')}
+                    >
                       Start Working
                     </Button>
                   )}
                   {issue.status === 'in_progress' && (
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleStatusChange(issue.id, 'resolved')}
+                    >
                       Mark as Resolved
                     </Button>
                   )}
-                  <Button size="sm" variant="ghost">
+                  <Button 
+                    size="sm" 
+                    variant="ghost"
+                    onClick={() => handleViewDetails(issue.id)}
+                  >
                     View Details
                   </Button>
-                  <Button size="sm" variant="ghost">
+                  <Button 
+                    size="sm" 
+                    variant="ghost"
+                    onClick={() => {
+                      const newStatus = issue.status === 'assigned' ? 'in_progress' : 
+                                      issue.status === 'in_progress' ? 'resolved' : 'assigned';
+                      handleStatusChange(issue.id, newStatus);
+                    }}
+                  >
                     Update Status
                   </Button>
                 </div>
